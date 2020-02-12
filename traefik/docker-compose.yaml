@@ -1,0 +1,30 @@
+version: "3.7"
+
+networks:
+  traefik-public:
+    name: traefik-public
+
+services:
+  traefik:
+    image: traefik:2.1
+    networks:
+      - traefik-public
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./acme.json:/acme.json
+    deploy:
+      labels:
+        - traefik.enable=true
+
+        # Redirect all http to https
+        - traefik.http.routers.http-to-https.priority=1000
+        - traefik.http.routers.http-to-https.rule=PathPrefix(`/`)
+        - traefik.http.routers.http-to-https.entrypoints=http
+        - traefik.http.routers.http-to-https.middlewares=redirect-to-https
+        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+
+        

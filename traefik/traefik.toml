@@ -1,0 +1,22 @@
+[log]
+  level = "INFO"
+
+[providers.docker]
+  exposedByDefault = false
+  network = "traefik-public"
+  swarmMode = true
+
+[api]
+  dashboard = true
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+
+  [entryPoints.https]
+    address = ":443"
+
+[certificatesResolvers.le.acme]
+  email = "contact@auhack.org"
+  storage = "acme.json"
+  [certificatesResolvers.le.acme.tlsChallenge]
